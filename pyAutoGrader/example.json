@@ -1,0 +1,35 @@
+{
+    "tests": [
+        {
+            "name": "example test 1",
+            "setup": "",
+            "run": "cat test2.txt",
+            "input": "",
+            "output": ["should pass"],
+            "comparison": "included",
+            "timeout": 2,
+            "points": 5
+          },
+          {
+            "name": "example test 1.5",
+            "setup": "",
+            "run": "ls",
+            "input": "",
+            "output": ["ex1","ex2"],
+            "comparison": "included",
+            "timeout": 2,
+            "points": 5
+          },
+          {
+            "name": "example test 2",
+            "setup": "",
+            "run": "echo hello ; echo $?",
+            "input": "",
+            "output": ["2"],
+            "comparison": "included",
+            "timeout": 2,
+            "points": 5
+          }
+      
+    ]
+  }

@@ -1,0 +1,54 @@
+#!/bin/bash 
+# A git util file to get status acrosss multiple repositories in a given folder  
+TWD="$(pwd)"
+function it(){
+    IT_DIR=$(pwd)
+    for name in $(ls -d */ );do
+        cd $name && 
+        echo $name &&
+        echo "" &&
+        eval "$@ "
+        cd $IT_DIR
+    done
+    
+}
+function pull(){
+    it git pull
+}
+function fetch(){
+    it git fetch 
+}
+
+function status(){
+    it git status 
+}
+function clean(){
+    for lb in $(ls -d */Labs/**/);do
+        #cd $name && 
+        echo $lb 
+        cd $lb && 
+        make clean 
+        echo ""
+        cd $TWD 
+    done
+}
+
+function push(){
+    it  git add . && git commit -m "lab $1 graded" && git push 
+}
+
+
+# subject to change and can be used as a util function 
+function util(){
+    for name in $(ls -d */Labs/* );do
+        echo $name 
+        cd $name && 
+        python3  /home/csw018/ta/lt/getLab.py $(pwd) && 
+        cd .. && eten
+        cd $TWD 
+    done
+}
+
+
+
+$@

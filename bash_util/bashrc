@@ -1,0 +1,173 @@
+PS1="%d:"
+alias ls='ls --color'
+alias d="docker"
+
+
+function buf(){
+	echo "" > ~/.buffer; open ~/.buffer
+}
+
+function note(){
+	nano /Users/school/.7h1sn073
+}
+
+# FOR MAC USE ONLY
+function quit(){
+  a="quit application \"$@\""
+  osascript -e "$a"
+}
+
+
+function jv(){
+	javac "$1.java" && java $1
+}
+
+# MAC ALIAS FOR VSCODE 
+function code(){
+	open -a "Visual Studio Code" $@
+}
+
+
+#google util function 
+function google(){
+  dir=("amazon" "apple" "gamestop" "netflix" "youtube" "weather")
+  ggl=("mail" "meet" "drive" "calendar" "cal")
+	if [[ "$@" = "" ]];then
+		open -a safari
+	elif [[ "$1" = "chrome" ]]; then
+    arr=$@
+    arr=${arr[@]:7}
+    run google chrome with "http://www.google.com/search?q=${arr// /+}"
+  elif [[ "$dir" = *"$@"* ]]; then
+    open "http://www.$@.com"
+  elif [[ "$ggl" = *"$@"* ]]; then
+    if [[ "$@" = "cal" ]]; then
+      open "http://calendar.google.com"
+    else
+      open "http://$@.google.com"
+    fi
+  elif [[ "$1" = "moodle" ]];then
+    open "https://moodle.bucknell.edu/my/index.php"
+  elif [[ "$1" = "span" ]]; then
+    open "https://www.spanishdict.com/translate/$2"
+  elif [[ "$1" = "desmos" ]];then
+    open "https://www.desmos.com/calculator"
+  elif [[ "$1" = "kahoot" ]];then
+    open "https://kahoot.it"
+  elif [[ "$@" = *"http"* ]];then
+    open "${@// /+}"
+  else
+		ar=$@
+    open "http://www.google.com/search?q=${ar// /+}"
+  fi
+}
+
+
+
+function push(){
+  url=$(git config --get remote.origin.url)
+  if [[ $1 = "-u" ]];then
+    open $url
+  else
+    m="$@"
+    git add . &&
+    git commit -m $m &&
+    git push &&
+    open "$url"
+  fi
+}
+
+
+
+#takes in a document name and exitcutes the program based on the doc
+#stops if there are any compilation errors
+function prog(){
+  fle=$1
+  two=$2
+  if [ "${fle:0:1}" = "-" ];then
+    fle=$2
+    two=$1
+  fi
+
+  lng="${fle##*.}"
+  if [ "${lng}" = "cpp" ] ;then
+    clang++ "${fle}"
+    s=$?
+    if [ $s -eq 0 ];then
+      ./a.out
+    fi
+  elif [ "${lng}" = "java" ]; then
+    if [ "${two}" = "-x" ];then
+      javac -Xlint *.java
+    else
+      javac *.java
+    fi
+    s=$?
+    if [ $s -eq 0 ];then
+      java "${fle%%.*}"
+    fi
+  elif [ "${lng}" = "py" ];then
+    python3 $fle
+  elif [ "${lng}" = "lisp" ];then
+    sbcl --script $fle
+  elif [ "${lng}" = "r" ];then
+    RScript $fle
+  elif [ "${lng}" = "sh" ];then
+    bash $fle
+  elif [ "${lng}" = "js" ];then
+    node $fle
+  elif [ "${lng}" = "bf" ];then
+    python3 /Users/school/.myStuff/brainfuck/brainfuck.py $fle
+
+  else
+    echo "${lng} is not supported yet"
+  fi
+}
+#takes you to a webpage with the given word in asl
+function asl() {
+  open "https://www.spreadthesign.com/en.us/search/?q=${1}"
+
+}
+
+
+
+#runs the given application with or without the given args
+function run(){
+	if [[ "$1" = *"."*  && "$1" != *".app"* ]]; then
+		prog $@
+	else
+		run2 $@
+	fi
+}
+
+function run2(){
+  a=""
+  b="apps"
+  c=""
+  for nme in $@;do
+    if [[ "${nme}" = "with" ]]; then
+      b="args"
+    elif [[ "${b}" = "apps" ]]; then
+      a="${a} ${nme}"
+    elif [[ "${b}" = "args" ]]; then
+      if [[ "${nme}" = "-u" ]]; then
+        b="url"
+      else
+        c="${c} ${nme}"
+      fi
+    elif [[ "$b" = "url" ]];then
+      c="$c http://www.${nme}.com"
+      b="args"
+    fi
+  done
+  a=${a:1}
+  c=${c:1}
+  open -a "$a" $c
+}
+
+
+#kills al background jobs
+function killjobs () {
+    {kill $(jobs -p)} &> /dev/null
+}
+
